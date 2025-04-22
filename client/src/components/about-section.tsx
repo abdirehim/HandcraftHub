@@ -63,9 +63,9 @@ export default function AboutSection() {
                   <Card className="overflow-hidden">
                     <CardContent className="p-6">
                       <div className="flex flex-wrap justify-between items-start gap-2 mb-2">
-                        <h3 className="text-xl font-bold">{item.role}</h3>
+                        <h3 className="text-xl font-bold">{item.title}</h3>
                         <Badge variant="outline" className="font-mono">
-                          {item.period}
+                          {item.startDate} - {item.endDate}
                         </Badge>
                       </div>
                       <div className="mb-4">
@@ -75,18 +75,19 @@ export default function AboutSection() {
                         </div>
                         <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                           <CalendarDays className="h-4 w-4" />
-                          <span>{item.duration}</span>
+                          <span>{item.startDate} - {item.endDate}</span>
                         </div>
                       </div>
                       <p className="text-muted-foreground mb-4">
                         {item.description}
                       </p>
-                      <div className="flex flex-wrap gap-2">
-                        {item.technologies.map((tech) => (
-                          <Badge key={tech} variant="secondary" className="font-mono text-xs">
-                            {tech}
-                          </Badge>
-                        ))}
+                      <div className="mt-4">
+                        <h5 className="font-semibold mb-2">Key Achievements:</h5>
+                        <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                          {item.achievements.map((achievement, i) => (
+                            <li key={i}>{achievement}</li>
+                          ))}
+                        </ul>
                       </div>
                     </CardContent>
                   </Card>
