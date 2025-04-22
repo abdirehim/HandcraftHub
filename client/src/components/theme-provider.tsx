@@ -27,29 +27,64 @@ export function ThemeProvider({
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+    () => {
+      try {
+        return (localStorage.getItem(storageKey) as Theme) || defaultTheme;
+      } catch {
+        return defaultTheme;
+      }
+    }
   );
 
   useEffect(() => {
     const root = window.document.documentElement;
+    
+    // First, remove both classes
     root.classList.remove("light", "dark");
 
+    // Then, apply the appropriate class
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
         : "light";
+      
+      console.log("System theme detected:", systemTheme);
       root.classList.add(systemTheme);
-      return;
+    } else {
+      console.log("Setting explicit theme:", theme);
+      root.classList.add(theme);
     }
+  }, [theme]);
 
-    root.classList.add(theme);
+  // Listen for theme changes in the system
+  useEffect(() => {
+    if (theme === "system") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      
+      const handleChange = () => {
+        const root = window.document.documentElement;
+        const systemTheme = mediaQuery.matches ? "dark" : "light";
+        
+        root.classList.remove("light", "dark");
+        root.classList.add(systemTheme);
+        console.log("System theme changed to:", systemTheme);
+      };
+      
+      mediaQuery.addEventListener("change", handleChange);
+      return () => mediaQuery.removeEventListener("change", handleChange);
+    }
   }, [theme]);
 
   const value = {
     theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme);
-      setTheme(theme);
+    setTheme: (newTheme: Theme) => {
+      console.log("Setting theme to:", newTheme);
+      try {
+        localStorage.setItem(storageKey, newTheme);
+      } catch (err) {
+        console.error("Failed to save theme to localStorage:", err);
+      }
+      setTheme(newTheme);
     },
   };
 
