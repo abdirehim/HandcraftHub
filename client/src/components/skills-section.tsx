@@ -42,7 +42,7 @@ export default function SkillsSection() {
             <TabsContent key={tab} value={tab} className="mt-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {skills
-                  .filter((skill) => skill.category === tab)
+                  .find((skillGroup) => skillGroup.category === tab)?.items
                   .map((skill, index) => (
                     <motion.div
                       key={skill.name}
@@ -55,13 +55,10 @@ export default function SkillsSection() {
                           <div className="flex justify-between items-center mb-2">
                             <h3 className="font-semibold">{skill.name}</h3>
                             <span className="text-sm text-muted-foreground">
-                              {skill.level}%
+                              {skill.proficiency}%
                             </span>
                           </div>
-                          <Progress value={skill.level} className="h-2" />
-                          <p className="mt-3 text-sm text-muted-foreground">
-                            {skill.description}
-                          </p>
+                          <Progress value={skill.proficiency} className="h-2" />
                         </CardContent>
                       </Card>
                     </motion.div>
